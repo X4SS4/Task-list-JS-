@@ -1,0 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.task-details {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.task-details h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+a {
+    display: block;
+    margin-top: 20px;
+}
