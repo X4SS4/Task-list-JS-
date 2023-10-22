@@ -48,8 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
       taskListDisplay = taskList;
     }
 
-    console.log(taskListDisplay);
-
     taskListDisplay.tasks.forEach(task => {
       const li = document.createElement('li');
       li.innerHTML = `
@@ -61,8 +59,17 @@ document.addEventListener('DOMContentLoaded', function () {
         <button class="edit-btn" data-id="${task.id}">Edit</button>
       </div>
       `;
+
+      const checkbox = li.querySelector('input[type="checkbox"]');
+        checkbox.addEventListener('change', function() {
+            task.toggleCompletion();
+            saveTaskListToLocalStorage(); 
+            renderTasks();
+        });
+
       tasksContainer.appendChild(li);
     });
+    
     
   }
   
