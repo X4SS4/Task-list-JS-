@@ -8,17 +8,17 @@ document.addEventListener('DOMContentLoaded', function () {
   const closeModalBtn = document.getElementById('close-modal');
   const addTaskBtn = document.getElementById('add-task-btn');
   
-  
+
   const savedTaskList = JSON.parse(localStorage.getItem('taskList'));
   if (savedTaskList) {
     loadTaskListFromLocalStorage();
     renderTasks();
   }
-  
+
   function saveTaskListToLocalStorage() {
     localStorage.setItem('taskList', JSON.stringify(taskList.tasks));
   }
-  
+
   function loadTaskListFromLocalStorage() {
     const savedTasks = JSON.parse(localStorage.getItem('taskList'));
     if (savedTasks) {
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
           taskData.description,
           taskData.creationDate,
           taskData.isCompleted
-          );
+        );
         taskList.addTask(task);
       });
     }
@@ -42,27 +42,36 @@ document.addEventListener('DOMContentLoaded', function () {
       const li = document.createElement('li');
       li.innerHTML = `
       <a href="details/task-details.html?id=${task.id}">Task name: ${task.title}</a>
-      <label for="checker"> Done: </label>
-      <input type="checkbox" name="checker"></checkbox>
+      <div id="check-area">
+        <label for="checker"> Status: </label>
+        <input type="checkbox" name="checker"></checkbox>      
+      </div>
       <div>
-      <button class="delete-btn" data-id="${task.id}">Delete</button>
-      <button class="edit-btn" data-id="${task.id}">Edit</button>
+        <button class="delete-btn" data-id="${task.id}">Delete</button>
+        <button class="edit-btn" data-id="${task.id}">Edit</button>
       </div>
       `;
       tasksContainer.appendChild(li);
     });
     saveTaskListToLocalStorage();
   }
-  
+
+  tasksContainer.addEventListener('click', function (event) {
+    if (event.target.classList.contains('edit-btn')) {
+      const taskId = parseInt(event.target.dataset.id);
+      window.location.href = `edit/task-edit.html?id=${taskId}`;
+    }
+  });
+
   function openModal() {
     taskModal.style.display = 'block';
   }
-  
+
   function closeModal() {
     taskModal.style.display = 'none';
     taskForm.reset();
   }
-  
+
   taskForm.addEventListener('submit', function (event) {
     event.preventDefault();
     const title = document.getElementById('title').value;
@@ -70,10 +79,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const id = (Date.now()) * 2; // generation id by date for begin
     const creationDate = new Date().toLocaleString();
     const isCompleted = false;
-    
+
     const newTask = new Task(id, title, description, creationDate, isCompleted);
     taskList.addTask(newTask);
-    
+
     renderTasks();
     closeModal();
   });
@@ -85,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
       renderTasks();
     }
   });
-  
+
   closeModalBtn.addEventListener('click', closeModal);
   addTaskBtn.addEventListener('click', openModal);
 
@@ -99,7 +108,7 @@ class Task {
     this.creationDate = creationDate;
     this.isCompleted = isCompleted;
   }
-  
+
   toggleCompletion() {
     this.isCompleted = !this.isCompleted;
   }
@@ -110,15 +119,15 @@ class TaskList {
   constructor() {
     this.tasks = [];
   }
-  
+
   addTask(task) {
     this.tasks.push(task);
   }
-  
+
   removeTask(id) {
     this.tasks = this.tasks.filter(task => task.id !== id);
   }
-  
+
   getTaskById(id) {
     return this.tasks.find(task => task.id === id);
   }
@@ -126,11 +135,11 @@ class TaskList {
   filterByCompletionStatus(isCompleted) {
     return this.tasks.filter(task => task.isCompleted === isCompleted);
   }
-  
+
   sortByTitle() {
     this.tasks.sort((a, b) => a.title.localeCompare(b.title));
   }
-  
+
   sortByCreationDate() {
     this.tasks.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
   }

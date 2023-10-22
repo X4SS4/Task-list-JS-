@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Edit</title>
+    <link rel="stylesheet" href="task-edit.css">
+    <script type="module" defer src="task-edit.js"></script>
+</head>
+
+<body>
+    <div class="task-details">
+        <h1 id="task-title"></h1>
+        <div>Description: </div>
+        <textarea name="task-description" id="task-description" cols="30" rows="10"></textarea>
+        <p id="task-creation-date"></p>
+        <p>
+            <label for="task-status">Task status</label>
+            <input type="checkbox" id="task-status" name="task" />
+        </p>
+        <button id="save-btn">Save Changes</button>
+        <a href="../index.html">Back to Task List</a>
+    </div>
+</body>
+
+</html>
