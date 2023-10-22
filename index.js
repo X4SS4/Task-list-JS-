@@ -1,4 +1,65 @@
+document.addEventListener('DOMContentLoaded', function () {
+  const taskList = new TaskList();
+  const tasksContainer = document.getElementById('tasks-container');
+  const taskForm = document.getElementById('task-form');
+  const taskModal = document.getElementById('task-modal');
+  const closeModalBtn = document.getElementById('close-modal');
+  const addTaskBtn = document.getElementById('add-task-btn');
 
+  function renderTasks() {
+    tasksContainer.innerHTML = '';
+    taskList.tasks.forEach(task => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+            <span>Task name: ${task.title}</span>
+            <label for="checker"> Done: </label>
+            <input type="checkbox" name="checker"></checkbox>
+            <div>
+                <button class="delete-btn" data-id="${task.id}">Delete</button>
+                <button class="edit-btn" data-id="${task.id}">Edit</button>
+                <button class="edit-btn" data-id="${task.id}">Edit</button>
+            </div>
+        `;
+      tasksContainer.appendChild(li);
+    });
+  }
+
+  function openModal() {
+    taskModal.style.display = 'block';
+  }
+
+  function closeModal() {
+    taskModal.style.display = 'none';
+    taskForm.reset();
+  }
+
+  taskForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const id = (Date.now())*2; // generation id by date for begin
+    const creationDate = new Date().toLocaleString();
+    const isCompleted = false; 
+
+    const newTask = new Task(id, title, description, creationDate, isCompleted);
+    taskList.addTask(newTask);
+
+    renderTasks();
+    closeModal();
+  });
+
+  tasksContainer.addEventListener('click', function (event) {
+    if (event.target.classList.contains('delete-btn')) {
+      const taskId = parseInt(event.target.dataset.id);
+      taskList.removeTask(taskId);
+      renderTasks();
+    }
+  });
+
+  closeModalBtn.addEventListener('click', closeModal);
+  addTaskBtn.addEventListener('click', openModal);
+
+})
 
 class Task {
     constructor(id, title, description, creationDate, isCompleted) {
