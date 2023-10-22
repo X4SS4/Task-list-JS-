@@ -1,10 +1,39 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const taskList = new TaskList();
   const tasksContainer = document.getElementById('tasks-container');
   const taskForm = document.getElementById('task-form');
   const taskModal = document.getElementById('task-modal');
   const closeModalBtn = document.getElementById('close-modal');
   const addTaskBtn = document.getElementById('add-task-btn');
+
+  const taskList = new TaskList();;
+
+  const savedTaskList = JSON.parse(localStorage.getItem('taskList'));
+  if (savedTaskList) {
+    loadTaskListFromLocalStorage();
+    renderTasks()
+  }
+
+  function saveTaskListToLocalStorage() {
+    localStorage.setItem('taskList', JSON.stringify(taskList.tasks));
+}
+
+function loadTaskListFromLocalStorage() {
+  const savedTasks = JSON.parse(localStorage.getItem('taskList'));
+  if (savedTasks) {
+      savedTasks.forEach(taskData => {
+          const task = new Task(
+              taskData.id,
+              taskData.title,
+              taskData.description,
+              taskData.creationDate,
+              taskData.isCompleted
+          );
+          taskList.addTask(task);
+      });
+  }
+}
+
+
 
   function renderTasks() {
     tasksContainer.innerHTML = '';
@@ -21,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
       tasksContainer.appendChild(li);
     });
+    saveTaskListToLocalStorage();
   }
 
   function openModal() {
