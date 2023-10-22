@@ -11,12 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
     taskList.tasks.forEach(task => {
       const li = document.createElement('li');
       li.innerHTML = `
-            <span>Task name: ${task.title}</span>
+            <a href="">Task name: ${task.title}</a>
             <label for="checker"> Done: </label>
             <input type="checkbox" name="checker"></checkbox>
             <div>
                 <button class="delete-btn" data-id="${task.id}">Delete</button>
-                <button class="edit-btn" data-id="${task.id}">Edit</button>
                 <button class="edit-btn" data-id="${task.id}">Edit</button>
             </div>
         `;

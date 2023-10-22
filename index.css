@@ -61,3 +61,39 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #45a049;
 }
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    align-items: center;
+    position: relative;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 15px;
+    padding: 10px;
+}
+
+li > a {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+li > label, input, div {
+    display: block;
+    margin: 10px; 
+}
+
+li button {
+    margin-left: 10px;
+}
