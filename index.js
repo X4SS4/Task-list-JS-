@@ -2,18 +2,19 @@
 
 document.addEventListener('DOMContentLoaded', function () {
   const taskList = new TaskList();
+  const taskPropertySelect = document.getElementById('taskProperty-select');
   const tasksContainer = document.getElementById('tasks-container');
   const taskForm = document.getElementById('task-form');
   const taskModal = document.getElementById('task-modal');
   const closeModalBtn = document.getElementById('close-modal');
-  const addTaskBtn = document.getElementById('add-task-btn');
-  
-
+  const addTaskBtn = document.getElementById('add-task-btn');  
   const savedTaskList = JSON.parse(localStorage.getItem('taskList'));
   if (savedTaskList) {
     loadTaskListFromLocalStorage();
     renderTasks();
   }
+
+
 
   function saveTaskListToLocalStorage() {
     localStorage.setItem('taskList', JSON.stringify(taskList.tasks));
@@ -35,17 +36,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-
   function renderTasks() {
     tasksContainer.innerHTML = '';
-    taskList.tasks.forEach(task => {
+    let taskListDisplay = new TaskList();
+    if (taskPropertySelect.value === 'done') {
+      taskListDisplay.tasks = taskList.filterByCompletionStatus(true);
+      console.log(taskList);
+    } else if (taskPropertySelect.value === 'remained') {
+      taskListDisplay.tasks = taskList.filterByCompletionStatus(false);
+    } else {
+      taskListDisplay = taskList;
+    }
+
+    console.log(taskListDisplay);
+
+    taskListDisplay.tasks.forEach(task => {
       const li = document.createElement('li');
       li.innerHTML = `
       <a href="details/task-details.html?id=${task.id}">Task name: ${task.title}</a>
-      <div id="check-area">
-        <label for="checker"> Status: </label>
-        <input type="checkbox" name="checker"></checkbox>      
-      </div>
+      <label for="checker"> Status: </label>
+      <input type="checkbox" name="checker" ${task.isCompleted ? 'checked' : ''}></input>      
       <div>
         <button class="delete-btn" data-id="${task.id}">Delete</button>
         <button class="edit-btn" data-id="${task.id}">Edit</button>
@@ -53,25 +63,25 @@ document.addEventListener('DOMContentLoaded', function () {
       `;
       tasksContainer.appendChild(li);
     });
-    saveTaskListToLocalStorage();
+    
   }
-
+  
+  function openModal() {
+    taskModal.style.display = 'block';
+  }
+  
+  function closeModal() {
+    taskModal.style.display = 'none';
+    taskForm.reset();
+  }
+  
   tasksContainer.addEventListener('click', function (event) {
     if (event.target.classList.contains('edit-btn')) {
       const taskId = parseInt(event.target.dataset.id);
       window.location.href = `edit/task-edit.html?id=${taskId}`;
     }
   });
-
-  function openModal() {
-    taskModal.style.display = 'block';
-  }
-
-  function closeModal() {
-    taskModal.style.display = 'none';
-    taskForm.reset();
-  }
-
+  
   taskForm.addEventListener('submit', function (event) {
     event.preventDefault();
     const title = document.getElementById('title').value;
@@ -84,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
     taskList.addTask(newTask);
 
     renderTasks();
+    saveTaskListToLocalStorage();
     closeModal();
   });
 
@@ -92,13 +103,21 @@ document.addEventListener('DOMContentLoaded', function () {
       const taskId = parseInt(event.target.dataset.id);
       taskList.removeTask(taskId);
       renderTasks();
+      saveTaskListToLocalStorage();
     }
+  });
+
+  taskPropertySelect.addEventListener('change', function () {
+    renderTasks();
   });
 
   closeModalBtn.addEventListener('click', closeModal);
   addTaskBtn.addEventListener('click', openModal);
 
 })
+
+
+
 
 class Task {
   constructor(id, title, description, creationDate, isCompleted) {
