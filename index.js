@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   const taskList = new TaskList();
   const taskPropertySelect = document.getElementById('taskProperty-select');
+  const taskSortSelect = document.getElementById('taskSort-select');
   const tasksContainer = document.getElementById('tasks-container');
   const taskForm = document.getElementById('task-form');
   const taskModal = document.getElementById('task-modal');
@@ -42,11 +43,21 @@ document.addEventListener('DOMContentLoaded', function () {
     if (taskPropertySelect.value === 'done') {
       taskListDisplay.tasks = taskList.filterByCompletionStatus(true);
       console.log(taskList);
-    } else if (taskPropertySelect.value === 'remained') {
+    } 
+    else if (taskPropertySelect.value === 'remained') {
       taskListDisplay.tasks = taskList.filterByCompletionStatus(false);
-    } else {
+    } 
+    else {
       taskListDisplay = taskList;
     }
+    
+    if (taskSortSelect.value === 'byName') {
+      taskListDisplay.sortByTitle();
+    } 
+    else if (taskSortSelect.value === 'byDate') {
+      taskListDisplay.sortByCreationDate();
+    } 
+
 
     taskListDisplay.tasks.forEach(task => {
       const li = document.createElement('li');
@@ -115,6 +126,11 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   taskPropertySelect.addEventListener('change', function () {
+    renderTasks();
+  });
+  
+  
+  taskSortSelect.addEventListener('change', function () {
     renderTasks();
   });
 
