@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const id = (Date.now()) * 2; // generation id by date for begin
-    const creationDate = new Date().toLocaleString();
+    const creationDate = new Date();
     const isCompleted = false;
 
     const newTask = new Task(id, title, description, creationDate, isCompleted);
@@ -183,6 +183,6 @@ class TaskList {
   }
 
   sortByCreationDate() {
-    this.tasks.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
+    this.tasks.sort((a, b) => b.creationDate > a.creationDate ? 1 : b.creationDate < a.creationDate ? -1 : 0);
   }
 }
